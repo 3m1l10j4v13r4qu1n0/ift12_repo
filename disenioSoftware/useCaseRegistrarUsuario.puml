@@ -1,0 +1,32 @@
+@startuml registrar_usuarios
+left to right direction
+
+' Actores
+actor Pareja
+actor SoyNovia
+actor SoyNovio
+actor Invitado
+
+
+' Generalización de actores
+SoyNovia -|> Pareja
+SoyNovio -|> Pareja
+
+rectangle "Registrar usuario" {
+  usecase UC10 as "Registrar usuario"
+  usecase UC10a as "Registrar pareja (SoyNovia/SoyNovio)"
+  usecase UC10b as "Registrar invitado"
+  
+}
+
+' Herencia de casos de uso
+UC10a -|> UC10
+UC10b -|> UC10
+
+' Relaciones de Pareja
+Pareja --> UC10a
+
+' Relaciones de Invitado
+Invitado --> UC10b
+
+@enduml

@@ -1,0 +1,63 @@
+@startuml useCaseDiagram
+left to right direction
+
+' Actores principales
+actor Pareja
+actor SoyNovia
+actor SoyNovio
+actor Invitado
+actor Administrador
+actor Pago as "Sistema de Pago"
+actor Mail as "Sistema de Correo"
+
+' Generalización de actores
+SoyNovia -|> Pareja
+SoyNovio -|> Pareja
+
+rectangle "Módulo Listas de Regalos" {
+  usecase UC1 as "Crear lista de regalos"
+  usecase UC2 as "Gestionar lista (agregar/quitar productos)"
+  usecase UC3 as "Ver estado en tiempo real"
+  usecase UC4 as "Buscar lista"
+  usecase UC5a as "Seleccionar productos"
+  usecase UC5b as "Pagar"
+  usecase UC5c as "Prosesar pago"
+  usecase UC6 as "Agregar mensaje personalizado"
+  usecase UC7 as "Notificar compra (email)"
+  usecase UC8 as "Administrar productos (CRUD)"
+  usecase UC9 as "Generar reportes"
+  usecase UC10 as "Resguistrar usuario"
+}
+
+' Relaciones de Pareja
+Pareja --> UC10
+Pareja --> UC1
+Pareja --> UC2
+Pareja --> UC3
+
+' Relaciones de Invitado
+Invitado --> UC4
+Invitado --> UC5a
+invitado --> UC5b
+Invitado --> UC6
+Invitado --> UC3
+
+' Relaciones de Administrador
+Administrador --> UC8
+Administrador --> UC9
+
+' Sistemas externos
+Pago --> UC5b
+Mail --> UC7
+
+' Dependencias
+UC1 .> UC10 : include
+UC2 .> UC3 : include
+UC5b .> UC5a : include
+UC5b .> UC5c : include
+UC5b .> UC6 : extend
+UC5b .> UC7 : include
+
+' fin del sistema uml
+@enduml
+

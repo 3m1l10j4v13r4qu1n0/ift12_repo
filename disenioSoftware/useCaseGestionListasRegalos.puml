@@ -1,0 +1,36 @@
+@startuml modulo_gestion_listas_simple
+left to right direction
+
+' === LADO IZQUIERDO ===
+actor Pareja
+actor SoyNovia
+actor SoyNovio 
+
+SoyNovia -|> Pareja #blue
+SoyNovio -|> Pareja #blue
+
+' === CENTRO ===
+rectangle "Gestión Listas Regalos" {
+  usecase UC2 as "Gestionar Lista"
+  usecase UC1b as "Crud Lista"
+  usecase UC4 as "Buscar Lista"
+  usecase UC3 as "Ver Estado"
+}
+
+' === LADO DERECHO ===
+actor Invitado
+
+' === RELACIONES IZQUIERDA ===
+Pareja -up-> UC2
+
+' === RELACIONES INTERNAS ===
+UC1b -up-|> UC2 #blue
+UC4 -down-|> UC2 #blue
+UC3 -down-|> UC2 #blue
+UC2 .down.> UC3 #green : include
+
+' === RELACIONES DERECHA ===
+Invitado -left-> UC4 #red
+Invitado -left-> UC3 #red
+
+@enduml
