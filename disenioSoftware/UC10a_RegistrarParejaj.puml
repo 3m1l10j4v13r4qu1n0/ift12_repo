@@ -1,0 +1,19 @@
+@startuml UC10a_RegistrarPareja
+left to right direction
+actor SoyNovia
+actor SoyNovio
+
+rectangle "Módulo Registro Parejas" {
+  usecase UC10a as "Registrar pareja"
+  usecase UC10f as "Vincular integrante"
+  usecase UC10g as "Verificar código/correo pareja"
+
+  UC10a --> UC10f : <<include>>
+  UC10f --> UC10g : <<include>>
+}
+
+SoyNovia --> UC10a
+SoyNovio --> UC10a
+
+
+@enduml

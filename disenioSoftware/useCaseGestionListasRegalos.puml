@@ -21,16 +21,16 @@ rectangle "Gestión Listas Regalos" {
 actor Invitado
 
 ' === RELACIONES IZQUIERDA ===
-Pareja -up-> UC2
+Pareja --> UC2
 
 ' === RELACIONES INTERNAS ===
-UC1b -up-|> UC2 #blue
-UC4 -down-|> UC2 #blue
-UC3 -down-|> UC2 #blue
-UC2 .down.> UC3 #green : include
+UC1b --|> UC2 #blue
+UC4 --|> UC2 #blue
+UC3 --|> UC2 #blue
+UC2 ..> UC3 #green : include
 
 ' === RELACIONES DERECHA ===
-Invitado -left-> UC4 #red
+Invitado --> UC4 #red
 Invitado -left-> UC3 #red
 
 @enduml

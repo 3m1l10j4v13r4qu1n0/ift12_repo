@@ -1,0 +1,37 @@
+@startuml modulo_gestion_listas_posicionamiento
+left to right direction
+
+' Actores a la izquierda
+actor Pareja
+actor SoyNovia
+actor SoyNovio
+
+SoyNovia -|> Pareja
+SoyNovio -|> Pareja
+
+' Módulo en el centro
+rectangle "Módulo Gestión de Listas" {
+  usecase UC2 as "Gestionar lista"
+  usecase UC1b as "Crear lista"
+  usecase UC4 as "Buscar lista" 
+  usecase UC3 as "Ver estado"
+}
+
+' Actor invitado a la derecha
+actor Invitado
+
+' --- Conexiones organizadas ---
+' Conexiones desde izquierda
+Pareja -right-> UC2
+
+' Conexiones internas del módulo
+UC1b -up-|> UC2
+UC4 -down-|> UC2
+UC3 -down-|> UC2
+UC2 .down.> UC3 : include
+
+' Conexiones desde derecha  
+Invitado -left-> UC4
+Invitado -left-> UC3
+
+@enduml
