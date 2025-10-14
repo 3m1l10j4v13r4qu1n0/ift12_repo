@@ -10,6 +10,8 @@ rectangle "Módulo Registro Invitados" {
 }
 
 Invitado --> UC10b
-
+note right of UC10b
+Hereda de UC10 (Registrar usuario)
+end note
 
 @enduml

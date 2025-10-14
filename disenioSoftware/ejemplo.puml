@@ -1,37 +1,44 @@
-@startuml modulo_gestion_listas_posicionamiento
+@startuml Gestion de lista
 left to right direction
 
-' Actores a la izquierda
-actor Pareja
-actor SoyNovia
-actor SoyNovio
+' Actores principales
+actor "Administrador" as Admin
+abstract actor "Pareja" as Pareja
+actor "SoyNovio" as Novio
+actor "SoyNovia" as Novia
 
-SoyNovia -|> Pareja
-SoyNovio -|> Pareja
+' Relación de herencia (generalización)
+Pareja <|-- Novio
+Pareja <|-- Novia
 
-' Módulo en el centro
-rectangle "Módulo Gestión de Listas" {
-  usecase UC2 as "Gestionar lista"
-  usecase UC1b as "Crear lista"
-  usecase UC4 as "Buscar lista" 
-  usecase UC3 as "Ver estado"
+rectangle "Gestión de Productos" {
+    usecase "UC-01 Registrar producto" as UC1
+    usecase "UC-02 Modificar producto" as UC2
+    usecase "UC-03 Eliminar producto" as UC3
+    usecase "UC-04 Consultar productos" as UC4
 }
 
-' Actor invitado a la derecha
-actor Invitado
+rectangle "Gestión de Listas" {
+    usecase "UC-05 Crear lista de regalos" as UC5
+    usecase "UC-06 Editar lista" as UC6
+    usecase "UC-07 Eliminar lista" as UC7
+    usecase "UC-08 Agregar producto a lista" as UC8
+    usecase "UC-09 Quitar producto de lista" as UC9
+    usecase "UC-10 Consultar estado de lista" as UC10
+}
 
-' --- Conexiones organizadas ---
-' Conexiones desde izquierda
-Pareja -right-> UC2
+' Relaciones del administrador
+Admin --> UC1
+Admin --> UC2
+Admin --> UC3
+Admin --> UC4
 
-' Conexiones internas del módulo
-UC1b -up-|> UC2
-UC4 -down-|> UC2
-UC3 -down-|> UC2
-UC2 .down.> UC3 : include
-
-' Conexiones desde derecha  
-Invitado -left-> UC4
-Invitado -left-> UC3
+' Relaciones del actor abstracto (heredadas por ambos)
+Pareja --> UC5
+Pareja --> UC6
+Pareja --> UC7
+Pareja --> UC8
+Pareja --> UC9
+Pareja --> UC10
 
 @enduml

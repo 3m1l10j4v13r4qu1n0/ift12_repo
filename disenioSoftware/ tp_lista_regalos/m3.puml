@@ -1,0 +1,197 @@
+@startuml moduloGestionProductos
+title M3: Módulo de Gestión de Productos (Detallado)
+
+left to right direction
+skinparam packageStyle rectangle
+
+' ===== ESTILOS VISUALES =====
+skinparam usecase {
+    BackgroundColor White
+    BorderColor Black
+    BorderThickness 2
+}
+
+skinparam actor {
+    BackgroundColor White
+    BorderColor Black
+    BorderThickness 2
+}
+
+skinparam package {
+    BorderThickness 2
+    FontStyle bold
+}
+
+' ===== ACTORES =====
+actor "Pareja\n<<abstract>>" as Pareja #LightGray
+actor "Novia" as SoyNovia #Pink
+actor "Novio" as SoyNovio #LightBlue
+
+' Generalización
+SoyNovia -up-|> Pareja
+SoyNovio -up-|> Pareja
+
+' ===== CASOS DE USO PRINCIPALES =====
+package "Gestión de Productos - Principal" #LightGreen {
+  usecase UC20 as "Agregar producto\na lista"
+  usecase UC21 as "Modificar producto"
+  usecase UC22 as "Eliminar producto"
+  usecase UC23 as "Ver mis productos"
+  usecase UC24 as "Ver estado de productos\nen tiempo real"
+}
+
+' ===== SUBMÓDULO: AGREGAR PRODUCTOS =====
+package "Agregar Productos" #PaleGreen {
+  usecase UC20a as "Agregar producto\nmanualmente"
+  usecase UC20b as "Importar desde catálogo"
+  usecase UC20c as "Agregar por URL\n(Amazon, etc.)"
+  usecase UC20d as "Buscar en tiendas\nintegradas"
+  usecase UC20e as "Escanear código\nde barras"
+  usecase UC20f as "Subir imagen\nde producto"
+}
+
+' ===== SUBMÓDULO: CONFIGURACIÓN DE PRODUCTOS =====
+package "Configuración de Productos" #MintCream {
+  usecase UC21a as "Establecer nombre\ny descripción"
+  usecase UC21b as "Definir precio/rango"
+  usecase UC21c as "Establecer cantidad\ndeseada"
+  usecase UC21d as "Asignar prioridad\n(Alta/Media/Baja)"
+  usecase UC21e as "Agregar categoría"
+  usecase UC21f as "Definir variantes\n(color, tamaño)"
+  usecase UC21g as "Agregar link de compra"
+}
+
+' ===== SUBMÓDULO: ORGANIZACIÓN =====
+package "Organización" #Honeydew {
+  usecase UC23a as "Ordenar por prioridad"
+  usecase UC23b as "Ordenar por precio"
+  usecase UC23c as "Ordenar por categoría"
+  usecase UC23d as "Filtrar por estado"
+  usecase UC23e as "Crear categorías\npersonalizadas"
+  usecase UC23f as "Mover entre categorías"
+  usecase UC23g as "Búsqueda de productos"
+}
+
+' ===== SUBMÓDULO: ESTADO Y MONITOREO =====
+package "Estado y Monitoreo" #LightCyan {
+  usecase UC24a as "Ver productos disponibles"
+  usecase UC24b as "Ver productos reservados"
+  usecase UC24c as "Ver productos comprados"
+  usecase UC24d as "Ver productos parciales"
+  usecase UC24e as "Ver historial de cambios"
+  usecase UC24f as "Notificación de\ncambios de estado"
+  usecase UC24g as "Dashboard de progreso"
+}
+
+' ===== SUBMÓDULO: ACCIONES MASIVAS =====
+package "Acciones Masivas" #MediumAquamarine {
+  usecase UC25a as "Selección múltiple"
+  usecase UC25b as "Eliminar múltiples"
+  usecase UC25c as "Cambiar categoría\nmúltiple"
+  usecase UC25d as "Cambiar prioridad\nmúltiple"
+  usecase UC25e as "Exportar selección"
+  usecase UC25f as "Importar productos\nmasivamente (CSV/Excel)"
+}
+
+' ===== RELACIONES DE ACTORES =====
+Pareja --> UC20
+Pareja --> UC21
+Pareja --> UC22
+Pareja --> UC23
+Pareja --> UC24
+
+' ===== RELACIONES ENTRE CASOS DE USO =====
+
+' Flujo Agregar
+UC20 ..> UC20a : <<default>>
+UC20 ..> UC20b : <<extend>>
+UC20 ..> UC20c : <<extend>>
+UC20 ..> UC20d : <<extend>>
+UC20 ..> UC20e : <<extend>>
+
+UC20a ..> UC21a : <<include>>
+UC20a ..> UC21b : <<include>>
+UC20a ..> UC20f : <<extend>>
+
+UC20b ..> UC20d : <<include>>
+UC20c ..> UC20f : <<include>>
+
+' Flujo Modificar
+UC21 ..> UC21a : <<include>>
+UC21 ..> UC21b : <<include>>
+UC21 ..> UC21c : <<extend>>
+UC21 ..> UC21d : <<extend>>
+UC21 ..> UC21e : <<extend>>
+UC21 ..> UC21f : <<extend>>
+UC21 ..> UC21g : <<extend>>
+UC21 ..> UC24e : <<include>>
+
+' Flujo Organización
+UC23 ..> UC23a : <<extend>>
+UC23 ..> UC23b : <<extend>>
+UC23 ..> UC23c : <<extend>>
+UC23 ..> UC23d : <<include>>
+UC23 ..> UC23g : <<extend>>
+
+UC23f ..> UC23e : <<precondition>>
+
+' Flujo Estado
+UC24 ..> UC24a : <<include>>
+UC24 ..> UC24b : <<include>>
+UC24 ..> UC24c : <<include>>
+UC24 ..> UC24d : <<include>>
+UC24 ..> UC24g : <<include>>
+
+UC24f ..> UC24 : <<triggered by>>
+
+' Flujo Acciones Masivas
+UC25a ..> UC23 : <<precondition>>
+UC25b ..> UC25a : <<include>>
+UC25c ..> UC25a : <<include>>
+UC25d ..> UC25a : <<include>>
+UC25e ..> UC25a : <<include>>
+
+UC25f ..> UC20 : <<alternative>>
+
+' ===== NOTAS =====
+note right of UC20
+  **Formas de agregar:**
+  1. Manual: formulario completo
+  2. Catálogo: productos predefinidos
+  3. URL: scraping automático
+  4. Tiendas: integración directa
+  5. Código de barras: móvil
+end note
+
+note right of UC21d
+  **Niveles de prioridad:**
+  
+  🔴 **Alta**: Imprescindible
+  🟡 **Media**: Deseable
+  🟢 **Baja**: Opcional
+  
+  Los invitados ven el orden
+  según prioridad establecida
+end note
+
+note bottom of UC24
+  **Estados posibles:**
+  
+  • **Disponible**: Nadie lo compró
+  • **Reservado**: En proceso de compra
+  • **Comprado**: Ya adquirido
+  • **Parcial**: Comprado parcialmente
+  
+  Actualización en tiempo real
+end note
+
+note bottom of UC25f
+  **Formato de importación:**
+  • CSV o Excel
+  • Columnas: nombre, precio,
+    cantidad, categoría, prioridad
+  • Validación automática
+  • Previsualización antes de importar
+end note
+
+@enduml

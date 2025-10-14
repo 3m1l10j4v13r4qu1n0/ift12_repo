@@ -1,0 +1,299 @@
+@startuml moduloAdministracion
+title M7: Módulo de Administración (Detallado)
+
+left to right direction
+skinparam packageStyle rectangle
+
+' ===== ESTILOS VISUALES =====
+skinparam usecase {
+    BackgroundColor White
+    BorderColor Black
+    BorderThickness 2
+}
+
+skinparam actor {
+    BackgroundColor White
+    BorderColor Black
+    BorderThickness 2
+}
+
+skinparam package {
+    BorderThickness 2
+    FontStyle bold
+}
+
+' ===== ACTORES =====
+actor "Administrador" as Admin #Orange
+actor "Super Admin" as SuperAdmin #Red
+
+' Generalización
+Admin -up-|> SuperAdmin
+
+' ===== CASOS DE USO PRINCIPALES =====
+package "Administración - Principal" #LightGray {
+  usecase UC60 as "Gestionar sistema"
+  usecase UC61 as "Administrar usuarios"
+  usecase UC62 as "Generar reportes"
+  usecase UC63 as "Configurar plataforma"
+}
+
+' ===== SUBMÓDULO: GESTIÓN DE USUARIOS =====
+package "Gestión de Usuarios" #Gainsboro {
+  usecase UC61a as "Ver lista de usuarios"
+  usecase UC61b as "Buscar usuario"
+  usecase UC61c as "Ver detalle de usuario"
+  usecase UC61d as "Editar usuario"
+  usecase UC61e as "Suspender usuario"
+  usecase UC61f as "Eliminar usuario"
+  usecase UC61g as "Resetear contraseña"
+  usecase UC61h as "Ver actividad de usuario"
+  usecase UC61i as "Asignar roles"
+}
+
+' ===== SUBMÓDULO: GESTIÓN DE CATÁLOGO =====
+package "Gestión de Catálogo" #Silver {
+  usecase UC62a as "Ver catálogo completo"
+  usecase UC62b as "Agregar producto\nal catálogo"
+  usecase UC62c as "Editar producto"
+  usecase UC62d as "Eliminar producto"
+  usecase UC62e as "Gestionar categorías"
+  usecase UC62f as "Importar productos\nmasivamente"
+  usecase UC62g as "Establecer precios\nsugeridos"
+  usecase UC62h as "Gestionar proveedores"
+}
+
+' ===== SUBMÓDULO: GESTIÓN DE LISTAS =====
+package "Gestión de Listas" #DarkGray {
+  usecase UC63a as "Ver todas las listas"
+  usecase UC63b as "Buscar lista"
+  usecase UC63c as "Ver detalle de lista"
+  usecase UC63d as "Moderar contenido"
+  usecase UC63e as "Suspender lista"
+  usecase UC63f as "Eliminar lista"
+  usecase UC63g as "Ver transacciones\nde lista"
+  usecase UC63h as "Resolver disputas"
+}
+
+' ===== SUBMÓDULO: REPORTES Y ESTADÍSTICAS =====
+package "Reportes y Estadísticas" #LightSlateGray {
+  usecase UC64a as "Dashboard general"
+  usecase UC64b as "Reporte de ventas"
+  usecase UC64c as "Reporte de usuarios"
+  usecase UC64d as "Reporte de productos\npopulares"
+  usecase UC64e as "Reporte financiero"
+  usecase UC64f as "Análisis de tendencias"
+  usecase UC64g as "Exportar reportes"
+  usecase UC64h as "Programar reportes\nautomáticos"
+}
+
+' ===== SUBMÓDULO: CONFIGURACIÓN DEL SISTEMA =====
+package "Configuración del Sistema" #WhiteSmoke {
+  usecase UC65a as "Configurar parámetros\ngenerales"
+  usecase UC65b as "Gestionar métodos\nde pago"
+  usecase UC65c as "Configurar comisiones"
+  usecase UC65d as "Gestionar plantillas\nde email"
+  usecase UC65e as "Configurar integraciones"
+  usecase UC65f as "Gestionar términos\ny condiciones"
+  usecase UC65g as "Configurar políticas\nde privacidad"
+  usecase UC65h as "Backup y restauración"
+}
+
+' ===== SUBMÓDULO: MODERACIÓN =====
+package "Moderación de Contenido" #DimGray {
+  usecase UC66a as "Ver cola de moderación"
+  usecase UC66b as "Revisar contenido\nreportado"
+  usecase UC66c as "Aprobar contenido"
+  usecase UC66d as "Rechazar contenido"
+  usecase UC66e as "Aplicar sanciones"
+  usecase UC66f as "Gestionar reportes"
+  usecase UC66g as "Ver log de moderación"
+}
+
+' ===== SUBMÓDULO: SEGURIDAD =====
+package "Seguridad y Auditoría" #SlateGray {
+  usecase UC67a as "Ver logs de sistema"
+  usecase UC67b as "Monitorear actividad\nsospechosa"
+  usecase UC67c as "Gestionar permisos"
+  usecase UC67d as "Configurar\nautenticación 2FA"
+  usecase UC67e as "Ver intentos\nde acceso"
+  usecase UC67f as "Bloquear IPs"
+  usecase UC67g as "Auditoría de cambios"
+}
+
+' ===== SUBMÓDULO: SOPORTE =====
+package "Soporte y Tickets" #LightGray {
+  usecase UC68a as "Ver tickets de soporte"
+  usecase UC68b as "Responder tickets"
+  usecase UC68c as "Asignar tickets"
+  usecase UC68d as "Cerrar tickets"
+  usecase UC68e as "Ver historial\nde cliente"
+  usecase UC68f as "Escalamiento a\nnivel superior"
+  usecase UC68g as "Base de conocimiento"
+}
+
+' ===== RELACIONES DE ACTORES =====
+Admin --> UC60
+Admin --> UC61
+Admin --> UC62
+Admin --> UC63
+
+SuperAdmin --> UC60
+SuperAdmin --> UC61
+SuperAdmin --> UC62
+SuperAdmin --> UC63
+
+' ===== RELACIONES ENTRE CASOS DE USO =====
+
+' Flujo Gestión de Usuarios
+UC61 ..> UC61a : <<include>>
+UC61 ..> UC61b : <<extend>>
+UC61a ..> UC61c : <<include>>
+UC61c ..> UC61d : <<extend>>
+UC61c ..> UC61e : <<extend>>
+UC61c ..> UC61f : <<extend>>
+UC61c ..> UC61g : <<extend>>
+UC61c ..> UC61h : <<include>>
+UC61d ..> UC61i : <<extend>>
+
+' Flujo Gestión de Catálogo
+UC62 ..> UC62a : <<include>>
+UC62a ..> UC62b : <<extend>>
+UC62a ..> UC62c : <<extend>>
+UC62a ..> UC62d : <<extend>>
+UC62 ..> UC62e : <<include>>
+UC62 ..> UC62f : <<extend>>
+UC62c ..> UC62g : <<include>>
+UC62b ..> UC62h : <<include>>
+
+' Flujo Gestión de Listas
+UC63 ..> UC63a : <<include>>
+UC63 ..> UC63b : <<extend>>
+UC63a ..> UC63c : <<include>>
+UC63c ..> UC63d : <<extend>>
+UC63c ..> UC63e : <<extend>>
+UC63c ..> UC63f : <<extend>>
+UC63c ..> UC63g : <<include>>
+UC63d ..> UC63h : <<extend>>
+
+' Flujo Reportes
+UC62 ..> UC64a : <<include>>
+UC64a ..> UC64b : <<extend>>
+UC64a ..> UC64c : <<extend>>
+UC64a ..> UC64d : <<extend>>
+UC64a ..> UC64e : <<extend>>
+UC64a ..> UC64f : <<extend>>
+UC64b ..> UC64g : <<extend>>
+UC64g ..> UC64h : <<extend>>
+
+' Flujo Configuración
+UC63 ..> UC65a : <<include>>
+UC63 ..> UC65b : <<include>>
+UC63 ..> UC65c : <<include>>
+UC63 ..> UC65d : <<extend>>
+UC63 ..> UC65e : <<extend>>
+UC63 ..> UC65f : <<include>>
+UC63 ..> UC65g : <<include>>
+UC63 ..> UC65h : <<extend>>
+
+' Flujo Moderación
+UC60 ..> UC66a : <<include>>
+UC66a ..> UC66b : <<include>>
+UC66b ..> UC66c : <<extend>>
+UC66b ..> UC66d : <<extend>>
+UC66b ..> UC66e : <<extend>>
+UC66b ..> UC66f : <<include>>
+UC66 ..> UC66g : <<include>>
+
+' Flujo Seguridad
+UC60 ..> UC67a : <<include>>
+UC60 ..> UC67b : <<include>>
+UC60 ..> UC67c : <<include>>
+UC67c ..> UC67d : <<extend>>
+UC67b ..> UC67e : <<include>>
+UC67b ..> UC67f : <<extend>>
+UC67 ..> UC67g : <<include>>
+
+' Flujo Soporte
+UC60 ..> UC68a : <<include>>
+UC68a ..> UC68b : <<include>>
+UC68a ..> UC68c : <<extend>>
+UC68b ..> UC68d : <<extend>>
+UC68b ..> UC68e : <<include>>
+UC68b ..> UC68f : <<extend>>
+UC68 ..> UC68g : <<extend>>
+
+' ===== NOTAS =====
+note right of UC61
+  **Gestión de usuarios incluye:**
+  
+  • CRUD completo
+  • Asignación de roles
+  • Suspensión temporal/permanente
+  • Historial de actividad
+  • Reseteo de contraseñas
+  
+  Solo SuperAdmin puede
+  eliminar usuarios definitivamente
+end note
+
+note right of UC64a
+  **Dashboard muestra:**
+  
+  📊 KPIs principales:
+  • Total de usuarios activos
+  • Listas creadas (mes/año)
+  • Transacciones realizadas
+  • Ingresos totales
+  • Productos más vendidos
+  • Tasa de conversión
+  • Promedio de compra
+  
+  Gráficos interactivos
+  con filtros por fecha
+end note
+
+note bottom of UC65b
+  **Métodos de pago:**
+  
+  • Activar/desactivar métodos
+  • Configurar credenciales API
+  • Establecer comisiones
+  • Configurar monedas
+  • Límites de transacción
+  • Países permitidos
+  
+  Integración con:
+  Stripe, MercadoPago, PayPal,
+  Transferencias, etc.
+end note
+
+note bottom of UC66a
+  **Cola de moderación:**
+  
+  Contenido pendiente de revisar:
+  • Imágenes de productos
+  • Mensajes personalizados
+  • Nombres de listas
+  • Descripciones
+  • Reportes de usuarios
+  
+  Prioridad: Urgente > Normal > Baja
+  Sistema de votación entre mods
+end note
+
+note bottom of UC67a
+  **Logs de sistema registran:**
+  
+  • Login/logout de usuarios
+  • Cambios en configuración
+  • Transacciones financieras
+  • Modificaciones de datos
+  • Errores del sistema
+  • Intentos de acceso fallidos
+  • Acciones administrativas
+  
+  Retención: 90 días
+  Exportable a CSV/JSON
+end note
+
+@enduml

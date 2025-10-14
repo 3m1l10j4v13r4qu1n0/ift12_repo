@@ -1,5 +1,6 @@
 @startuml UC10a_RegistrarPareja
 left to right direction
+
 actor SoyNovia
 actor SoyNovio
 
@@ -14,6 +15,10 @@ rectangle "Módulo Registro Parejas" {
 
 SoyNovia --> UC10a
 SoyNovio --> UC10a
+
+note right of UC10a
+Hereda de UC10 (Registrar usuario)
+end note
 
 
 @enduml
