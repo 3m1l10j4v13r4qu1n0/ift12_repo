@@ -1,0 +1,41 @@
+@startuml moduloUsuarios
+left to right direction
+skinparam packageStyle rectangle
+
+skinparam usecase {
+    BackgroundColor White
+    BorderColor Black
+    BorderThickness 2
+}
+
+skinparam actor {
+    BackgroundColor White
+    BorderColor Black
+    BorderThickness 2
+}
+
+skinparam package {
+    BorderThickness 2
+    FontStyle bold
+}
+
+title Módulo 1b: REGISTRO DE INVITADO
+
+' ===== SUBMÓDULO: REGISTRO DE INVITADO =====
+package "   Registro de Invitado" #Honeydew {
+    usecase (Registrar como\nInvitado) as UC01_I
+    usecase (Validar datos\nde Invitado) as UC01_I1
+    usecase (Asignar rol\nInvitado) as UC01_I2
+    usecase (Verificar correo\nInvitado) as UC01_I3
+    usecase (Configurar\npreferencias) as UC01_I4
+    usecase (Crear cuenta\nde Invitado) as UC01_I5
+}
+
+' Flujo Registro de Invitado
+UC01_I ..> UC01_I1 : <<include>>
+UC01_I ..> UC01_I2 : <<include>>
+UC01_I ..> UC01_I3 : <<include>>
+UC01_I3 ..> UC01_I4 : <<extend>>
+UC01_I ..> UC01_I5 : <<include>>
+
+@enduml

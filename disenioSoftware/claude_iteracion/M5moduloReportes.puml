@@ -1,0 +1,88 @@
+@startuml moduloReportes
+left to right direction
+skinparam packageStyle rectangle
+
+skinparam usecase {
+    BackgroundColor White
+    BorderColor Black
+    BorderThickness 2
+}
+
+skinparam actor {
+    BackgroundColor White
+    BorderColor Black
+    BorderThickness 2
+}
+
+title Módulo 5: Reportes e Informes
+
+' ===== ACTORES =====
+actor "Pareja\n<<abstract>>" as Pareja #LightGray
+actor "Novio" as SoyNovio #LightBlue
+actor "Novia" as SoyNovia #Pink
+actor "Administrador" as Admin #Orange
+
+' Generalización
+SoyNovio -up-|> Pareja
+SoyNovia -up-|> Pareja
+
+' ===== CASOS DE USO =====
+package "Reportes" #Lavender {
+  
+  usecase (Generar reporte de\nproductos más elegidos) as UC40
+  
+  usecase (Generar reporte de\ninvitados que compraron) as UC41
+  
+  usecase (Generar reporte\nde estado de stock) as UC42
+  
+  package "   Filtros de Reportes" #Thistle {
+    usecase (Filtrar por\nfecha) as UC40a
+    usecase (Filtrar por\ncategoría) as UC40b
+    usecase (Exportar reporte\na PDF/Excel) as UC40c
+  }
+}
+
+' ===== RELACIONES =====
+
+' Actores
+Pareja --> UC40
+Pareja --> UC41
+Admin --> UC40
+Admin --> UC41
+Admin --> UC42
+
+' Relaciones entre casos de uso
+UC40 ..> UC40a : <<extend>>
+UC40 ..> UC40b : <<extend>>
+UC40 ..> UC40c : <<extend>>
+
+UC41 ..> UC40a : <<extend>>
+UC41 ..> UC40c : <<extend>>
+
+UC42 ..> UC40c : <<extend>>
+
+note right of UC40
+  Muestra los productos
+  más agregados a las
+  listas de regalos
+end note
+
+note bottom of UC41
+  Detalla información de
+  invitados que realizaron
+  compras
+end note
+
+note right of UC42
+  Control de inventario
+  disponible solo para
+  el administrador
+end note
+
+note bottom of UC40c
+  Los reportes pueden
+  exportarse para su
+  análisis offline
+end note
+
+@enduml

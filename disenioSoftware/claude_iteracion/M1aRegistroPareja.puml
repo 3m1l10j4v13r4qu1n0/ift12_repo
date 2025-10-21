@@ -1,0 +1,53 @@
+@startuml moduloUsuarios
+left to right direction
+skinparam packageStyle rectangle
+
+skinparam usecase {
+    BackgroundColor White
+    BorderColor Black
+    BorderThickness 2
+}
+
+skinparam actor {
+    BackgroundColor White
+    BorderColor Black
+    BorderThickness 2
+}
+
+skinparam package {
+    BorderThickness 2
+    FontStyle bold
+}
+
+title Módulo 1a: Registro de Pareja
+
+
+
+' ===== SUBMÓDULO: REGISTRO DE PAREJA =====
+  package "   Registro de Pareja" #MistyRose {
+    usecase (Registrar como\nPareja) as UC01_P
+    usecase (Seleccionar rol\nNovio/Novia) as UC01_P1
+    usecase (Generar código\nde vinculación) as UC01_P2
+    usecase (Vincular segundo\nintegrante) as UC01_P3
+    usecase (Verificar código\nde pareja) as UC01_P4
+    usecase (Confirmar vinculación\npor correo) as UC01_P5
+    usecase (Completar perfil\nde pareja) as UC01_P6
+    usecase (Validar datos\nde Novio) as UC01_P7
+    usecase (Validar datos\nde Novia) as UC01_P8
+  }
+
+  ' Flujo Registro de Pareja
+UC01_P ..> UC01_P1 : <<include>>
+
+
+UC01_P1 ..> UC01_P2 : <<include>>\n[primer integrante]
+UC01_P1 ..> UC01_P3 : <<extend>>\n[segundo integrante]
+UC01_P1 ..> UC01_P7 : <<extend>>\n[si es Novio]
+UC01_P1 ..> UC01_P8 : <<extend>>\n[si es Novia]
+
+UC01_P3 ..> UC01_P4 : <<include>>
+UC01_P4 ..> UC01_P5 : <<include>>
+UC01_P5 ..> UC01_P6 : <<include>>
+
+
+@enduml

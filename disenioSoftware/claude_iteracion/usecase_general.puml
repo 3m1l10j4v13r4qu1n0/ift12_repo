@@ -1,0 +1,112 @@
+@startuml useCaseGeneral
+left to right direction
+skinparam packageStyle rectangle
+
+' ===== ESTILOS VISUALES =====
+skinparam usecase {
+    BackgroundColor White
+    BorderColor Black
+    BorderThickness 2
+    FontSize 14
+}
+
+skinparam actor {
+    BackgroundColor White
+    BorderColor Black
+    BorderThickness 2
+    FontSize 12
+}
+
+skinparam package {
+    BorderThickness 2
+    FontStyle bold
+    FontSize 14
+}
+
+title Sistema de Gestión de Listas de Regalos - Diagrama General
+
+' ===== ACTORES =====
+actor "Pareja\n<<abstract>>" as Pareja #LightGray
+actor "Novio" as Novio #LightBlue
+actor "Novia" as Novia #Pink
+actor "Invitado" as Invitado #Wheat
+actor "Administrador" as Admin #Orange
+
+' Sistemas externos
+actor "Sistema de\nPago" as SistemaPago <<external>> #LightCyan
+actor "Sistema de\nCorreo" as SistemaCorreo <<external>> #LightCyan
+
+' Generalización
+Novio -up-|> Pareja
+Novia -up-|> Pareja
+
+' ===== CASOS DE USO GENERALES =====
+package "Sistema de Lista de Regalos" {
+
+  usecase (Gestión de\nUsuarios) as MOD1 #LightYellow
+  usecase (Gestión de\nListas de Regalos) as MOD2 #LightBlue
+  usecase (Gestión de\nProductos) as MOD3 #LightGreen
+  usecase (Compra de\nRegalos) as MOD4 #LightCoral
+  usecase (Reportes) as MOD5 #Lavender
+  usecase (Notificaciones) as MOD6 #LightPink
+
+}
+
+' ===== RELACIONES =====
+
+' Pareja
+Pareja --> MOD1
+Pareja --> MOD2
+Pareja --> MOD5
+
+' Invitado
+Invitado --> MOD1
+Invitado --> MOD4
+
+' Administrador
+Admin --> MOD1
+Admin --> MOD3
+Admin --> MOD5
+
+' Sistemas externos
+SistemaPago --> MOD4
+SistemaCorreo --> MOD6
+
+' Relaciones entre módulos
+MOD2 ..> MOD1 #Blue :  <<precondition>> 
+MOD4 ..> MOD3 #Green: <<include>>
+MOD4 ..> MOD6 #DarkRed : <<triggers>>
+MOD5 ..> MOD2 #DarkBlue : <<include>>
+MOD5 ..> MOD4 #DarkCyan : <<include>>
+
+note right of MOD1
+  Registro e ingreso
+  al sistema
+end note
+
+note right of MOD2
+  Creación y gestión
+  de listas por parejas
+end note
+
+note right of MOD3
+  Catálogo de productos
+  y control de stock
+end note
+
+note right of MOD4
+  Búsqueda y compra
+  de regalos
+end note
+
+note right of MOD5
+  Estadísticas e
+  informes del sistema
+end note
+
+note right of MOD6
+  Envío de correos
+  automáticos
+end note
+
+@enduml

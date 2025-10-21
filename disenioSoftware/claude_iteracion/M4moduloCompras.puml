@@ -1,0 +1,96 @@
+@startuml moduloCompras
+left to right direction
+skinparam packageStyle rectangle
+
+skinparam usecase {
+    BackgroundColor White
+    BorderColor Black
+    BorderThickness 2
+}
+
+skinparam actor {
+    BackgroundColor White
+    BorderColor Black
+    BorderThickness 2
+}
+
+title Módulo 4: Compra de Regalos (Invitados)
+
+' ===== ACTORES =====
+actor "Invitado" as Invitado #Wheat
+actor "Sistema de\nPago" as SistemaPago <<external>> #LightCyan
+
+' ===== CASOS DE USO =====
+package "Compra de Regalos" #LightCoral {
+  
+  package "   Búsqueda de Lista" #MistyRose {
+    usecase (Buscar lista\nde regalos) as UC30
+    usecase (Buscar por nombre\nde la pareja) as UC30a
+    usecase (Buscar por número\nde lista) as UC30b
+    usecase (Ver lista\nencontrada) as UC30c
+  }
+  
+  package "   Selección de Regalos" #LightSalmon {
+    usecase (Seleccionar uno o más\nproductos) as UC31
+    usecase (Agregar mensaje\npersonalizado) as UC32
+    usecase (Ver productos\ndisponibles) as UC31a
+  }
+  
+  package "   Proceso de Pago" #Salmon {
+    usecase (Realizar pago) as UC33
+    usecase (Integrar con sistema\nde pago externo) as UC33a
+    usecase (Confirmar compra) as UC34
+    usecase (Descontar stock\nautomáticamente) as UC35
+  }
+}
+
+' ===== RELACIONES =====
+
+' Actores
+Invitado --> UC30
+Invitado --> UC31
+Invitado --> UC32
+Invitado --> UC33
+SistemaPago --> UC33a
+
+' Relaciones entre casos de uso
+UC30 ..> UC30a : <<extend>>
+UC30 ..> UC30b : <<extend>>
+UC30 ..> UC30c : <<include>>
+
+UC31 ..> UC30 : <<precondition>>
+UC31 ..> UC31a : <<include>>
+
+UC32 ..> UC31 : <<extend>>
+
+UC33 ..> UC31 : <<include>>
+UC33 ..> UC33a : <<include>>
+
+UC34 ..> UC33 : <<include>>
+UC34 ..> UC35 : <<include>>
+
+note right of UC30
+  El invitado puede buscar
+  la lista por nombre de
+  pareja o número de lista
+end note
+
+note bottom of UC32
+  El mensaje es opcional
+  pero puede incluir
+  felicitaciones personales
+end note
+
+note bottom of UC33a
+  Se asume integración
+  con sistema de pago
+  externo
+end note
+
+note right of UC35
+  Al confirmar el pago,
+  el stock se descuenta
+  automáticamente
+end note
+
+@enduml

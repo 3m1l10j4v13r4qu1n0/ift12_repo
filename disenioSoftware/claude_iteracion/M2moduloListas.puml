@@ -1,0 +1,103 @@
+@startuml moduloListas
+left to right direction
+skinparam packageStyle rectangle
+
+skinparam usecase {
+    BackgroundColor White
+    BorderColor Black
+    BorderThickness 2
+}
+
+skinparam actor {
+    BackgroundColor White
+    BorderColor Black
+    BorderThickness 2
+}
+
+title Módulo 2: Gestión de Listas de Regalos (Pareja)
+
+' ===== ACTORES =====
+actor "Pareja\n<<abstract>>" as Pareja #LightGray
+actor "Novio" as SoyNovio #LightBlue
+actor "Novia" as SoyNovia #Pink
+
+' Generalización
+SoyNovio -up-|> Pareja
+SoyNovia -up-|> Pareja
+
+' ===== CASOS DE USO =====
+package "Gestión de Listas de Regalos" #LightBlue {
+  
+  usecase (Crear lista\nde regalos) as UC10
+  
+  package "   Configuración de Lista" #AliceBlue {
+    usecase (Ingresar fecha\nde casamiento) as UC10a
+    usecase (Ingresar fecha\nde finalización) as UC10b
+    usecase (Ingresar mensaje\nde bienvenida) as UC10c
+  }
+  
+  package "   Gestión de Productos" #LightCyan {
+    usecase (Agregar productos\na la lista) as UC11
+    usecase (Quitar productos\nde la lista) as UC12
+    usecase (Verificar productos\ncon stock disponible) as UC11a
+  }
+  
+  package "   Seguimiento" #PowderBlue {
+    usecase (Ver estado de\nlos regalos) as UC13
+    usecase (Ver quién compró\ncada regalo) as UC13a
+    usecase (Ver mensajes de\nfelicitación) as UC13b
+  }
+}
+
+' ===== RELACIONES =====
+
+' Actores
+Pareja --> UC10
+Pareja --> UC11
+Pareja --> UC12
+Pareja --> UC13
+
+' Relaciones entre casos de uso
+UC10 ..> UC10a : <<include>>
+UC10 ..> UC10b : <<include>>
+UC10 ..> UC10c : <<include>>
+
+UC11 ..> UC10 : <<precondition>>
+UC11 ..> UC11a : <<include>>
+
+UC12 ..> UC10 : <<precondition>>
+
+UC13 ..> UC10 : <<precondition>>
+UC13 ..> UC13a : <<include>>
+UC13 ..> UC13b : <<include>>
+
+note right of UC10
+  La pareja puede crear
+  su lista después de
+  registrarse
+end note
+
+note bottom of UC10b
+  Límite para que los
+  invitados puedan comprar
+  regalos de la lista
+end note
+
+note bottom of UC11
+  Solo se pueden agregar
+  productos con stock disponible
+end note
+
+note bottom of UC12
+  La pareja puede modificar
+  su lista hasta la fecha
+  de finalización
+end note
+
+note right of UC13
+  Visualización en
+  tiempo real del estado
+  de los regalos
+end note
+
+@enduml

@@ -1,0 +1,141 @@
+@startuml moduloUsuariosGeneral
+left to right direction
+skinparam packageStyle rectangle
+
+skinparam usecase {
+    BackgroundColor White
+    BorderColor Black
+    BorderThickness 2
+}
+
+skinparam actor {
+    BackgroundColor White
+    BorderColor Black
+    BorderThickness 2
+}
+
+skinparam package {
+    BorderThickness 2
+    FontStyle bold
+}
+
+title Módulo 1: Gestión de Usuarios (General)
+
+' ===== ACTORES =====
+actor "Pareja\n<<abstract>>" as Pareja #LightGray
+actor "Novio" as SoyNovio #LightBlue
+actor "Novia" as SoyNovia #Pink
+actor "Invitado" as Invitado #Wheat
+actor "Administrador" as Admin #Orange
+actor "Sistema de\nCorreo" as Mail <<external>> #LightCyan
+
+' Generalización
+SoyNovio -up-|> Pareja
+SoyNovia -up-|> Pareja
+
+' ===== CASOS DE USO PRINCIPALES =====
+package "Gestión de Usuarios" #LightYellow {
+  
+  usecase (Registrarse en\nel sistema) as UC01
+  usecase (Iniciar sesión) as UC02
+  usecase (Gestionar perfil) as UC03
+  usecase (Recuperar contraseña) as UC04
+  usecase (Cerrar sesión) as UC05
+  
+  package "   Submódulos de Registro" #Lavender {
+    usecase (Registro de Pareja) as MOD1A #MistyRose
+    usecase (Registro de Invitado) as MOD1B #Honeydew
+  }
+  
+  package "   Validaciones Comunes" #AliceBlue {
+    usecase (Validar datos\nde registro) as UC01b
+    usecase (Verificar DNI y usuario\nno existentes) as UC01c
+    usecase (Encriptar contraseña) as UC01d
+    usecase (Enviar correo de\nverificación) as UC01e
+  }
+}
+
+' ===== RELACIONES DE ACTORES =====
+
+' Actores - Registro
+SoyNovio --> UC01
+SoyNovia --> UC01
+Invitado --> UC01
+
+' Actores - Funcionalidades generales
+Pareja --> UC02
+Pareja --> UC03
+Pareja --> UC04
+Pareja --> UC05
+
+Invitado --> UC02
+Invitado --> UC03
+Invitado --> UC04
+Invitado --> UC05
+
+Admin --> UC02
+Admin --> UC05
+
+' Sistema externo
+Mail --> UC01e
+Mail --> UC04
+
+' ===== RELACIONES ENTRE CASOS DE USO =====
+
+' Flujo principal
+UC01 ..> MOD1A : <<extend>>\n[si es Pareja]
+UC01 ..> MOD1B : <<extend>>\n[si es Invitado]
+UC01 ..> UC01b : <<include>>
+UC01 ..> UC01c : <<include>>
+UC01 ..> UC01d : <<include>>
+UC01 ..> UC02 : <<extend>>\n[post-verificación]
+
+' Relaciones de módulos
+MOD1A ..> UC01b #DarkRed : <<include>>
+MOD1A ..> UC01c #DarkRed : <<include>>
+MOD1A ..> UC01d #DarkRed : <<include>>
+MOD1A ..> UC01e #DarkRed : <<include>>
+
+MOD1B ..> UC01b #DarkGreen : <<include>>
+MOD1B ..> UC01c #DarkGreen : <<include>>
+MOD1B ..> UC01d #DarkGreen : <<include>>
+MOD1B ..> UC01e #DarkGreen : <<include>>
+
+' Otras relaciones
+UC03 ..> UC02 : <<precondition>>
+UC04 ..> UC01e : <<include>>
+
+' ===== NOTAS EXPLICATIVAS =====
+
+note right of MOD1A
+  Ver detalle en:
+  Módulo 1A - Registro de Pareja
+  
+  Incluye proceso de vinculación
+  entre Novio y Novia
+end note
+
+note right of MOD1B
+  Ver detalle en:
+  Módulo 1B - Registro de Invitado
+  
+  Registro independiente
+  sin vinculación
+end note
+
+note bottom of UC01b
+  **Validaciones incluyen:**
+  • Email válido y único
+  • Contraseña segura (8+ chars)
+  • Campos obligatorios
+  • Términos y condiciones
+  • Captcha anti-bot
+end note
+
+note right of UC02
+  Permite el acceso al sistema
+  a usuarios registrados
+  (Pareja, Invitado, Admin)
+end note
+
+@enduml

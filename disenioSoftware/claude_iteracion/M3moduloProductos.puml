@@ -1,0 +1,83 @@
+@startuml moduloProductos
+left to right direction
+skinparam packageStyle rectangle
+
+skinparam usecase {
+    BackgroundColor White
+    BorderColor Black
+    BorderThickness 2
+}
+
+skinparam actor {
+    BackgroundColor White
+    BorderColor Black
+    BorderThickness 2
+}
+
+title Módulo 3: Gestión de Productos (Administrador)
+
+' ===== ACTORES =====
+actor "Administrador" as Admin #Orange
+
+' ===== CASOS DE USO =====
+package "Gestión de Productos" #LightGreen {
+  
+  usecase (Registrar productos\nen el sistema) as UC20
+  
+  package "   Datos del Producto" #PaleGreen {
+    usecase (Ingresar código\n<único>) as UC20a
+    usecase (Ingresar nombre\ny descripción) as UC20b
+    usecase (Ingresar precio) as UC20c
+    usecase (Ingresar stock\ndisponible) as UC20d
+    usecase (Asignar categoría) as UC20e
+    usecase (Agregar imagen\n<opcional>) as UC20f
+  }
+  
+  package "   Control de Stock" #MintCream {
+    usecase (Actualizar stock\nde productos) as UC21
+    usecase (Verificar disponibilidad\nde productos) as UC22
+    usecase (Descontar stock\nautomáticamente) as UC21a
+  }
+}
+
+' ===== RELACIONES =====
+
+' Actores
+Admin --> UC20
+Admin --> UC21
+Admin --> UC22
+
+' Relaciones entre casos de uso
+UC20 ..> UC20a : <<include>>
+UC20 ..> UC20b : <<include>>
+UC20 ..> UC20c : <<include>>
+UC20 ..> UC20d : <<include>>
+UC20 ..> UC20e : <<include>>
+UC20 ..> UC20f : <<extend>>
+
+UC21 ..> UC21a : <<include>>
+
+note right of UC20
+  El administrador registra
+  previamente todos los
+  productos del sistema
+end note
+
+note bottom of UC20a
+  El código de producto
+  debe ser único en
+  el sistema
+end note
+
+note bottom of UC20e
+  Categorías: electrodomésticos,
+  muebles, decoración, etc.
+end note
+
+note right of UC21a
+  Al confirmar una compra,
+  el stock se descuenta
+  automáticamente
+end note
+
+@enduml

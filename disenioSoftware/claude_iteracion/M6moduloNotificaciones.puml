@@ -1,0 +1,73 @@
+@startuml moduloNotificaciones
+left to right direction
+skinparam packageStyle rectangle
+
+skinparam usecase {
+    BackgroundColor White
+    BorderColor Black
+    BorderThickness 2
+}
+
+skinparam actor {
+    BackgroundColor White
+    BorderColor Black
+    BorderThickness 2
+}
+
+title Módulo 6: Notificaciones
+
+' ===== ACTORES =====
+actor "Sistema de\nCorreo" as SistemaCorreo <<external>> #LightCyan
+
+' ===== CASOS DE USO =====
+package "Notificaciones" #LightPink {
+  
+  package "   Notificaciones a Invitados" #Pink {
+    usecase (Enviar confirmación\nde compra al invitado) as UC50
+    usecase (Incluir detalle\nde la compra) as UC50a
+    usecase (Incluir información\nde pago) as UC50b
+  }
+  
+  package "   Notificaciones a Parejas" #LightPink {
+    usecase (Notificar compra\na la pareja) as UC51
+    usecase (Incluir datos del\nproducto comprado) as UC51a
+    usecase (Incluir mensaje\ndel invitado) as UC51b
+  }
+}
+
+' ===== RELACIONES =====
+
+' Actores
+SistemaCorreo --> UC50
+SistemaCorreo --> UC51
+
+' Relaciones entre casos de uso
+UC50 ..> UC50a : <<include>>
+UC50 ..> UC50b : <<include>>
+
+UC51 ..> UC51a : <<include>>
+UC51 ..> UC51b : <<extend>>
+
+note right of UC50
+  Se envía automáticamente
+  al confirmar el pago
+end note
+
+note bottom of UC50a
+  Incluye: productos comprados,
+  cantidades, precio total
+end note
+
+note right of UC51
+  La pareja recibe notificación
+  en tiempo real cuando
+  compran un regalo
+end note
+
+note bottom of UC51b
+  Si el invitado agregó un
+  mensaje personalizado,
+  se incluye en la notificación
+end note
+
+@enduml
