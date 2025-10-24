@@ -73,9 +73,9 @@ SistemaPago --> MOD4
 SistemaCorreo --> MOD6
 
 ' Relaciones entre módulos
-MOD2 ..> MOD1 #Blue :  <<precondition>> 
+MOD2 ..> MOD1 #Blue :  <<include>> 
 MOD4 ..> MOD3 #Green: <<include>>
-MOD4 ..> MOD6 #DarkRed : <<triggers>>
+MOD4 ..> MOD6 #DarkRed : <<include>>
 MOD5 ..> MOD2 #DarkBlue : <<include>>
 MOD5 ..> MOD4 #DarkCyan : <<include>>
 

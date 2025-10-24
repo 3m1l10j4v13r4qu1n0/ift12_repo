@@ -41,11 +41,9 @@ package "Gestión de Usuarios" #LightYellow {
   usecase (Gestionar perfil) as UC03
   usecase (Recuperar contraseña) as UC04
   usecase (Cerrar sesión) as UC05
+  usecase (Registro de Pareja) as MOD1A #MistyRose
+  usecase (Registro de Invitado) as MOD1B #Honeydew
   
-  package "   Submódulos de Registro" #Lavender {
-    usecase (Registro de Pareja) as MOD1A #MistyRose
-    usecase (Registro de Invitado) as MOD1B #Honeydew
-  }
   
   package "   Validaciones Comunes" #AliceBlue {
     usecase (Validar datos\nde registro) as UC01b
@@ -83,12 +81,12 @@ Mail --> UC04
 ' ===== RELACIONES ENTRE CASOS DE USO =====
 
 ' Flujo principal
-UC01 ..> MOD1A : <<extend>>\n[si es Pareja]
-UC01 ..> MOD1B : <<extend>>\n[si es Invitado]
+MOD1A -up-|> UC01 : <<generalizacion>>
+MOD1B -up-|> UC01 : <<generalizacion>>
 UC01 ..> UC01b : <<include>>
 UC01 ..> UC01c : <<include>>
 UC01 ..> UC01d : <<include>>
-UC01 ..> UC02 : <<extend>>\n[post-verificación]
+UC01 ..> UC02 : <<extend>>
 
 ' Relaciones de módulos
 MOD1A ..> UC01b #DarkRed : <<include>>
@@ -102,7 +100,7 @@ MOD1B ..> UC01d #DarkGreen : <<include>>
 MOD1B ..> UC01e #DarkGreen : <<include>>
 
 ' Otras relaciones
-UC03 ..> UC02 : <<precondition>>
+UC03 ..> UC02 : <<include>>
 UC04 ..> UC01e : <<include>>
 
 ' ===== NOTAS EXPLICATIVAS =====
