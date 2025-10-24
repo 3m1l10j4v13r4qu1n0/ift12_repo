@@ -56,27 +56,26 @@ package "Gestión de Usuarios" #LightYellow {
 ' ===== RELACIONES DE ACTORES =====
 
 ' Actores - Registro
-SoyNovio --> UC01
-SoyNovia --> UC01
-Invitado --> UC01
+Pareja -up-> MOD1A #DarkGray
+Invitado -up-> MOD1B #76594F
 
 ' Actores - Funcionalidades generales
-Pareja --> UC02
-Pareja --> UC03
-Pareja --> UC04
-Pareja --> UC05
+Pareja --> UC02 #DarkGray
+Pareja --> UC03 #DarkGray
+Pareja --> UC04 #DarkGray
+Pareja --> UC05 #DarkGray
 
-Invitado --> UC02
-Invitado --> UC03
-Invitado --> UC04
-Invitado --> UC05
+Invitado --> UC02 #76594F
+Invitado --> UC03 #76594F
+Invitado --> UC04 #76594F
+Invitado --> UC05 #76594F
 
-Admin --> UC02
-Admin --> UC05
+Admin --> UC02 #DarkOrange
+Admin --> UC05 #DarkOrange
 
 ' Sistema externo
-Mail --> UC01e
-Mail --> UC04
+Mail --> UC01e #DarkCyan
+Mail --> UC04 #DarkCyan
 
 ' ===== RELACIONES ENTRE CASOS DE USO =====
 
@@ -86,18 +85,9 @@ MOD1B -up-|> UC01 : <<generalizacion>>
 UC01 ..> UC01b : <<include>>
 UC01 ..> UC01c : <<include>>
 UC01 ..> UC01d : <<include>>
-UC01 ..> UC02 : <<extend>>
+UC01 ..> UC01e : <<include>>
+UC01 ..> UC02  : <<extend>>
 
-' Relaciones de módulos
-MOD1A ..> UC01b #DarkRed : <<include>>
-MOD1A ..> UC01c #DarkRed : <<include>>
-MOD1A ..> UC01d #DarkRed : <<include>>
-MOD1A ..> UC01e #DarkRed : <<include>>
-
-MOD1B ..> UC01b #DarkGreen : <<include>>
-MOD1B ..> UC01c #DarkGreen : <<include>>
-MOD1B ..> UC01d #DarkGreen : <<include>>
-MOD1B ..> UC01e #DarkGreen : <<include>>
 
 ' Otras relaciones
 UC03 ..> UC02 : <<include>>
