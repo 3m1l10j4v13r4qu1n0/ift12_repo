@@ -1,0 +1,377 @@
+@startuml classDiagram
+skinparam classAttributeIconSize 0
+skinparam class {
+    BackgroundColor White
+    BorderColor Black
+    BorderThickness 2
+    ArrowColor Black
+}
+
+title Sistema de Gestión de Listas de Regalos - Diagrama de Clases
+
+' ===== CLASES PRINCIPALES DE USUARIO =====
+
+abstract class Usuario {
+    - idUsuario: int
+    - dni: String {unique}
+    - nombreUsuario: String {unique}
+    - email: String {unique}
+    - contraseña: String {encrypted}
+    - fechaRegistro: DateTime
+    - verificado: boolean
+    - activo: boolean
+    --
+    + registrarse(): void
+    + iniciarSesion(): boolean
+    + cerrarSesion(): void
+    + gestionarPerfil(): void
+    + recuperarContraseña(): void
+    + verificarEmail(): boolean
+}
+
+class Invitado {
+    - telefono: String
+    - preferencias: String
+    --
+    + buscarLista(criterio: String): Lista
+    + seleccionarProductos(): List<Producto>
+    + agregarMensaje(mensaje: String): void
+    + realizarCompra(): Compra
+}
+
+class PersonaPareja {
+    - nombre: String
+    - apellido: String
+    - esNovio: boolean
+    - fechaVinculacion: DateTime
+    --
+    + validarDatos(): boolean
+    + solicitarVinculacion(): String
+    + aceptarVinculacion(codigo: String): boolean
+}
+
+class Pareja {
+    - idPareja: int
+    - codigoVinculacion: String {unique}
+    - fechaCasamiento: Date
+    - fechaVinculacion: DateTime
+    - estado: EstadoPareja
+    --
+    + generarCodigoVinculacion(): String
+    + vincularIntegrantes(): boolean
+    + crearLista(): Lista
+    + agregarProducto(producto: Producto): void
+    + quitarProducto(producto: Producto): void
+    + verEstadoRegalos(): List<EstadoRegalo>
+    + estaCompleta(): boolean
+}
+
+class Administrador {
+    - nivelAcceso: int
+    --
+    + registrarProducto(producto: Producto): void
+    + actualizarStock(producto: Producto, cantidad: int): void
+    + verificarDisponibilidad(): List<Producto>
+    + generarReportes(): Reporte
+}
+
+enum EstadoPareja {
+    PENDIENTE_VINCULACION
+    VINCULADO
+    ACTIVO
+    INACTIVO
+}
+
+' Herencia de usuarios
+Usuario <|-- Invitado
+Usuario <|-- PersonaPareja
+Usuario <|-- Administrador
+
+' Composición: Pareja compuesta por 2 PersonasPareja
+Pareja "1" *-- "2" PersonaPareja : compuesta por >
+
+Pareja --> EstadoPareja
+
+' ===== LISTA DE REGALOS =====
+
+class Lista {
+    - idLista: int {unique}
+    - numeroLista: String {unique}
+    - fechaCasamiento: Date
+    - fechaFinalizacion: Date
+    - mensajeBienvenida: String
+    - fechaCreacion: DateTime
+    - activa: boolean
+    --
+    + crearLista(): void
+    + configurarFechas(fechaCasamiento: Date, fechaFin: Date): void
+    + agregarMensaje(mensaje: String): void
+    + agregarProducto(producto: Producto): void
+    + quitarProducto(producto: Producto): void
+    + obtenerEstado(): EstadoLista
+}
+
+class ItemLista {
+    - idItem: int
+    - cantidad: int
+    - estadoItem: EstadoItem
+    - fechaAgregado: DateTime
+    --
+    + marcarComoComprado(): void
+    + verificarDisponibilidad(): boolean
+}
+
+enum EstadoItem {
+    DISPONIBLE
+    PARCIALMENTE_COMPRADO
+    COMPRADO
+}
+
+enum EstadoLista {
+    BORRADOR
+    ACTIVA
+    FINALIZADA
+    CERRADA
+}
+
+' Relaciones Lista
+Pareja "1" -- "0..*" Lista : posee >
+Lista "1" *-- "0..*" ItemLista : contiene >
+ItemLista "*" -- "1" Producto : referencia >
+Lista --> EstadoLista
+ItemLista --> EstadoItem
+
+' ===== PRODUCTOS =====
+
+class Producto {
+    - idProducto: int
+    - codigo: String {unique}
+    - nombre: String
+    - descripcion: String
+    - precio: decimal
+    - stockActual: int
+    - imagen: String
+    - activo: boolean
+    - fechaRegistro: DateTime
+    --
+    + registrar(): void
+    + actualizarStock(cantidad: int): void
+    + verificarDisponibilidad(): boolean
+    + descontarStock(cantidad: int): void
+}
+
+class Categoria {
+    - idCategoria: int
+    - nombre: String
+    - descripcion: String
+    --
+    + listarProductos(): List<Producto>
+}
+
+' Relaciones Producto
+Producto "*" -- "1" Categoria : pertenece a >
+Administrador "1" -- "*" Producto : gestiona >
+
+' ===== COMPRAS =====
+
+class Compra {
+    - idCompra: int
+    - fechaCompra: DateTime
+    - montoTotal: decimal
+    - estadoPago: EstadoPago
+    - codigoTransaccion: String
+    --
+    + realizarPago(): boolean
+    + confirmarCompra(): void
+    + generarComprobante(): void
+}
+
+class DetalleCompra {
+    - idDetalle: int
+    - cantidad: int
+    - precioUnitario: decimal
+    - subtotal: decimal
+    - mensajePersonalizado: String
+    --
+    + calcularSubtotal(): decimal
+}
+
+enum EstadoPago {
+    PENDIENTE
+    PROCESANDO
+    APROBADO
+    RECHAZADO
+    CANCELADO
+}
+
+class Pago {
+    - idPago: int
+    - monto: decimal
+    - metodoPago: String
+    - fechaPago: DateTime
+    - codigoAutorizacion: String
+    --
+    + procesarPago(): boolean
+    + validarTransaccion(): boolean
+}
+
+' Relaciones Compra
+Invitado "1" -- "0..*" Compra : realiza >
+Compra "1" *-- "1..*" DetalleCompra : contiene >
+DetalleCompra "*" -- "1" Producto : incluye >
+Compra "1" -- "1" Lista : asociada a >
+Compra "1" -- "1" Pago : procesa >
+Compra --> EstadoPago
+
+' ===== NOTIFICACIONES =====
+
+class Notificacion {
+    - idNotificacion: int
+    - asunto: String
+    - cuerpo: String
+    - fechaEnvio: DateTime
+    - enviado: boolean
+    - tipoNotificacion: TipoNotificacion
+    --
+    + enviarNotificacion(): boolean
+    + generarContenido(): String
+}
+
+enum TipoNotificacion {
+    CONFIRMACION_REGISTRO
+    RECUPERACION_CONTRASEÑA
+    VINCULACION_PAREJA
+    CONFIRMACION_COMPRA
+    NOTIFICACION_REGALO
+}
+
+class NotificacionInvitado {
+    - detalleCompra: String
+    - informacionPago: String
+    --
+    + incluirDetalleCompra(): void
+}
+
+class NotificacionPareja {
+    - productoComprado: String
+    - mensajeInvitado: String
+    --
+    + incluirDatosProducto(): void
+    + incluirMensaje(): void
+}
+
+' Relaciones Notificaciones
+Notificacion <|-- NotificacionInvitado
+Notificacion <|-- NotificacionPareja
+Notificacion --> TipoNotificacion
+Usuario "1" -- "0..*" Notificacion : recibe >
+Compra "1" -- "1..*" Notificacion : genera >
+
+' ===== REPORTES =====
+
+abstract class Reporte {
+    - idReporte: int
+    - fechaGeneracion: DateTime
+    - titulo: String
+    - formatoExportacion: FormatoReporte
+    --
+    + generarReporte(): void
+    + aplicarFiltros(): void
+    + exportar(): File
+}
+
+class ReporteProductosMasElegidos {
+    - fechaInicio: Date
+    - fechaFin: Date
+    - categoria: Categoria
+    --
+    + filtrarPorFecha(): void
+    + filtrarPorCategoria(): void
+}
+
+class ReporteInvitadosCompradores {
+    - fechaInicio: Date
+    - fechaFin: Date
+    --
+    + listarInvitados(): List<Invitado>
+    + calcularTotales(): decimal
+}
+
+class ReporteStock {
+    - stockMinimo: int
+    --
+    + verificarStockBajo(): List<Producto>
+    + calcularValorInventario(): decimal
+}
+
+enum FormatoReporte {
+    PDF
+    EXCEL
+    CSV
+}
+
+' Relaciones Reportes
+Reporte <|-- ReporteProductosMasElegidos
+Reporte <|-- ReporteInvitadosCompradores
+Reporte <|-- ReporteStock
+Reporte --> FormatoReporte
+Pareja "1" -- "0..*" Reporte : consulta >
+Administrador "1" -- "0..*" Reporte : genera >
+
+' ===== SERVICIOS EXTERNOS =====
+
+interface SistemaPagoExterno {
+    + procesarTransaccion(monto: decimal): boolean
+    + validarTarjeta(): boolean
+    + generarCodigoAutorizacion(): String
+}
+
+interface SistemaCorreo {
+    + enviarCorreo(destinatario: String, asunto: String, cuerpo: String): boolean
+    + validarDireccion(email: String): boolean
+}
+
+' Relaciones Servicios Externos
+Pago ..> SistemaPagoExterno : usa
+Notificacion ..> SistemaCorreo : usa
+
+' ===== NOTAS EXPLICATIVAS =====
+
+note right of Usuario
+  Clase abstracta base para
+  todos los tipos de usuario
+  del sistema
+end note
+
+note bottom of PersonaPareja
+  Usuario individual que forma
+  parte de una pareja.
+  Puede ser Novio (esNovio=true)
+  o Novia (esNovio=false)
+end note
+
+note right of Pareja
+  Entidad que agrupa a dos
+  PersonasPareja vinculadas.
+  Se crea cuando ambos
+  integrantes se registran
+  y vinculan mediante código.
+end note
+
+note right of Lista
+  Cada pareja puede tener
+  una lista activa con
+  productos seleccionados
+end note
+
+note bottom of Compra
+  Registra todas las transacciones
+  realizadas por invitados
+end note
+
+note right of Notificacion
+  Sistema automático de
+  notificaciones por correo
+end note
+
+@enduml

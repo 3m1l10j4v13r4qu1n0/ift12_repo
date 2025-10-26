@@ -1,0 +1,97 @@
+@startuml Diagrana de clases
+
+class Usuario {
+  +id: bigint
+  +nombre: string
+  +apellido: string
+  +dni: string
+  +telefono: string
+  +email: string
+  +username: string
+  +password_hash: string
+  +tipo: enum {INVITADO, PAREJA, ADMIN}
+  +registrar()
+  +login()
+}
+
+class Pareja {
+  +id: bigint
+  +usuario_id: bigint
+  +nombre_pareja: string
+  +crearLista()
+}
+
+class ListaRegalos {
+  +id: bigint
+  +pareja_id: bigint
+  +codigo_publico: string
+  +fecha_casamiento: date
+  +fecha_finalizacion: date
+  +mensaje_bienvenida: text
+  +estado(): string
+  +agregarProducto(producto, cantidad)
+  +quitarProducto(producto)
+}
+
+class Producto {
+  +id: bigint
+  +codigo: string
+  +nombre: string
+  +descripcion: text
+  +precio: decimal
+  +stock: int
+  +categoria: string
+  +imagen_url: string
+  +esDisponible(): bool
+}
+
+class ItemLista {
+  +id: bigint
+  +lista_id: bigint
+  +producto_id: bigint
+  +cantidad_deseada: int
+  +cantidad_reservada: int
+  +cantidad_comprada: int
+}
+
+class Compra {
+  +id: bigint
+  +invitado_id: bigint
+  +fecha: datetime
+  +total: decimal
+  +estado: enum {PENDIENTE, CONFIRMADO, CANCELADO}
+  +procesarPago()
+}
+
+class CompraItem {
+  +id: bigint
+  +compra_id: bigint
+  +producto_id: bigint
+  +cantidad: int
+  +mensaje: text
+}
+
+class Notificacion {
+  +id: bigint
+  +tipo: string
+  +destinatario_id: bigint
+  +contenido: text
+  +enviar()
+}
+
+class Administrador {
+  +id: bigint
+  +usuario_id: bigint
+  +gestionarProducto()
+  +generarReporte()
+}
+
+' Relaciones
+Usuario "1" -- "0..1" Pareja : perfil
+Pareja "1" -- "0..*" ListaRegalos
+ListaRegalos "1" -- "0..*" ItemLista
+Producto "1" -- "0..*" ItemLista
+Compra "1" -- "0..*" CompraItem
+Usuario "1" -- "0..*" Compra : invitado
+Administrador --|> Usuario
+@enduml
