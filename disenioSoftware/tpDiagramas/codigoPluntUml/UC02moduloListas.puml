@@ -14,7 +14,7 @@ skinparam actor {
     BorderThickness 2
 }
 
-title Módulo 2: Gestión de Listas de Regalos (Pareja)
+title UC02: Gestión de Listas de Regalos (Pareja)
 
 ' ===== ACTORES =====
 actor "Pareja\n<<abstract>>" as Pareja #LightGray
@@ -62,12 +62,12 @@ UC10 ..> UC10a : <<include>>
 UC10 ..> UC10b : <<include>>
 UC10 ..> UC10c : <<include>>
 
-UC11 ..> UC10 : <<precondition>>
+UC11 ..> UC10 : <<include>>
 UC11 ..> UC11a : <<include>>
 
-UC12 ..> UC10 : <<precondition>>
+UC12 ..> UC10 : <<include>>
 
-UC13 ..> UC10 : <<precondition>>
+UC13 ..> UC10 : <<include>>
 UC13 ..> UC13a : <<include>>
 UC13 ..> UC13b : <<include>>
 

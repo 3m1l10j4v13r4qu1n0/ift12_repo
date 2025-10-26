@@ -14,7 +14,7 @@ skinparam actor {
     BorderThickness 2
 }
 
-title Módulo 3: Gestión de Productos (Administrador)
+title UC03: Gestión de Productos (Administrador)
 
 ' ===== ACTORES =====
 actor "Administrador" as Admin #Orange

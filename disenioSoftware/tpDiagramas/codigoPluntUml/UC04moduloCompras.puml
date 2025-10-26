@@ -14,7 +14,7 @@ skinparam actor {
     BorderThickness 2
 }
 
-title Módulo 4: Compra de Regalos (Invitados)
+title UC04: Compra de Regalos (Invitados)
 
 ' ===== ACTORES =====
 actor "Invitado" as Invitado #Wheat
@@ -58,7 +58,7 @@ UC30 ..> UC30a : <<extend>>
 UC30 ..> UC30b : <<extend>>
 UC30 ..> UC30c : <<include>>
 
-UC31 ..> UC30 : <<precondition>>
+UC31 ..> UC30 : <<include>>
 UC31 ..> UC31a : <<include>>
 
 UC32 ..> UC31 : <<extend>>

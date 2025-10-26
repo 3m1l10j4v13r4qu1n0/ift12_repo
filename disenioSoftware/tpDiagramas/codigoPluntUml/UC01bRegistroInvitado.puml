@@ -19,7 +19,10 @@ skinparam package {
     FontStyle bold
 }
 
-title Módulo 1b: REGISTRO DE INVITADO
+title UC01b: REGISTRO DE INVITADO
+
+' ===== ACTORES =====
+actor "Invitado" as Invitado #Wheat
 
 ' ===== SUBMÓDULO: REGISTRO DE INVITADO =====
 package "   Registro de Invitado" #Honeydew {
@@ -30,6 +33,9 @@ package "   Registro de Invitado" #Honeydew {
     usecase (Configurar\npreferencias) as UC01_I4
     usecase (Crear cuenta\nde Invitado) as UC01_I5
 }
+
+' Actores - Registro
+Invitado --> UC01_I
 
 ' Flujo Registro de Invitado
 UC01_I ..> UC01_I1 : <<include>>

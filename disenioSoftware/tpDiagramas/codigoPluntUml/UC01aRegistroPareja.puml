@@ -19,7 +19,12 @@ skinparam package {
     FontStyle bold
 }
 
-title Módulo 1a: Registro de Pareja
+title UC01a: Registro de Pareja
+
+' ===== ACTORES =====
+actor "Pareja\n<<abstract>>" as Pareja #LightGray
+actor "Novio" as SoyNovio #LightBlue
+actor "Novia" as SoyNovia #Pink
 
 
 
@@ -35,8 +40,12 @@ title Módulo 1a: Registro de Pareja
     usecase (Validar datos\nde Novio) as UC01_P7
     usecase (Validar datos\nde Novia) as UC01_P8
   }
+' Generalización
+SoyNovio -up-|> Pareja
+SoyNovia -up-|> Pareja
 
-  ' Flujo Registro de Pareja
+' Flujo Registro de Pareja
+Pareja --> UC01_P
 UC01_P ..> UC01_P1 : <<include>>
 
 

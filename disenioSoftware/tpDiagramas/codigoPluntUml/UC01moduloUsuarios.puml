@@ -19,7 +19,7 @@ skinparam package {
     FontStyle bold
 }
 
-title Módulo 1: Gestión de Usuarios (General)
+title UC01: Gestión de Usuarios (General)
 
 ' ===== ACTORES =====
 actor "Pareja\n<<abstract>>" as Pareja #LightGray
@@ -56,14 +56,14 @@ package "Gestión de Usuarios" #LightYellow {
 ' ===== RELACIONES DE ACTORES =====
 
 ' Actores - Registro
-Pareja -up-> MOD1A #DarkGray
+Pareja -up-> MOD1A 
 Invitado -up-> MOD1B #76594F
 
 ' Actores - Funcionalidades generales
-Pareja --> UC02 #DarkGray
-Pareja --> UC03 #DarkGray
-Pareja --> UC04 #DarkGray
-Pareja --> UC05 #DarkGray
+Pareja --> UC02 
+Pareja --> UC03 
+Pareja --> UC04 
+Pareja --> UC05 
 
 Invitado --> UC02 #76594F
 Invitado --> UC03 #76594F
@@ -97,7 +97,7 @@ UC04 ..> UC01e : <<include>>
 
 note right of MOD1A
   Ver detalle en:
-  Módulo 1A - Registro de Pareja
+  Registro de Pareja
   
   Incluye proceso de vinculación
   entre Novio y Novia
@@ -105,7 +105,7 @@ end note
 
 note right of MOD1B
   Ver detalle en:
-  Módulo 1B - Registro de Invitado
+  Registro de Invitado
   
   Registro independiente
   sin vinculación

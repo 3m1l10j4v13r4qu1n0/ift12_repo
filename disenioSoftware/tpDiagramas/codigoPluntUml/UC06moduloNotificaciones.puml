@@ -14,7 +14,7 @@ skinparam actor {
     BorderThickness 2
 }
 
-title Módulo 6: Notificaciones
+title UC06: Notificaciones
 
 ' ===== ACTORES =====
 actor "Sistema de\nCorreo" as SistemaCorreo <<external>> #LightCyan

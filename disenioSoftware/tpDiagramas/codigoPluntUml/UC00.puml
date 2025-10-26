@@ -23,7 +23,7 @@ skinparam package {
     FontSize 14
 }
 
-title Sistema de Gestión de Listas de Regalos - Diagrama General
+title Sistema de Gestión de Listas de Regalos - Diagrama General 
 
 ' ===== ACTORES =====
 actor "Pareja\n<<abstract>>" as Pareja #LightGray
