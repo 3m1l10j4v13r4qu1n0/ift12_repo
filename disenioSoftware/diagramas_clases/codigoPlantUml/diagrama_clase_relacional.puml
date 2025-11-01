@@ -1,0 +1,344 @@
+@startuml relationalDiagram
+!define Table(name,desc) class name as "desc" << (T,#FFAAAA) >>
+!define primary_key(x) <b><u>x</u></b>
+!define foreign_key(x) <i>x</i>
+!define unique(x) <color:green>x</color>
+
+skinparam class {
+    BackgroundColor White
+    BorderColor Black
+    BorderThickness 2
+    ArrowColor Black
+}
+
+title Sistema de Gestión de Listas de Regalos - Modelo Relacional
+
+' ===== TABLA USUARIO =====
+class Usuario {
+    primary_key(idUsuario: INT)
+    unique(dni: VARCHAR(20))
+    unique(nombreUsuario: VARCHAR(50))
+    unique(email: VARCHAR(100))
+    contraseña: VARCHAR(255)
+    fechaRegistro: DATETIME
+    verificado: BOOLEAN
+    activo: BOOLEAN
+    tipoUsuario: VARCHAR(20)
+    --
+    ' Atributos Invitado
+    telefono: VARCHAR(20)
+    preferencias: VARCHAR(255)
+    --
+    ' Atributos PersonaPareja
+    nombre: VARCHAR(50)
+    apellido: VARCHAR(50)
+    esNovio: BOOLEAN
+    fechaVinculacion: DATETIME
+    foreign_key(idPareja: INT)
+    --
+    ' Atributos Administrador
+    nivelAcceso: INT
+}
+
+' ===== TABLA PAREJA =====
+class Pareja {
+    primary_key(idPareja: INT)
+    unique(codigoVinculacion: VARCHAR(50))
+    fechaCasamiento: DATE
+    fechaVinculacion: DATETIME
+    estado: ENUM
+    --
+    Estados:
+    - PENDIENTE_VINCULACION
+    - VINCULADO
+    - ACTIVO
+    - INACTIVO
+}
+
+' ===== TABLA CATEGORIA =====
+class Categoria {
+    primary_key(idCategoria: INT)
+    nombre: VARCHAR(100)
+    descripcion: TEXT
+}
+
+' ===== TABLA PRODUCTO =====
+class Producto {
+    primary_key(idProducto: INT)
+    unique(codigo: VARCHAR(50))
+    nombre: VARCHAR(200)
+    descripcion: TEXT
+    precio: DECIMAL(10,2)
+    stockActual: INT
+    imagen: VARCHAR(255)
+    activo: BOOLEAN
+    fechaRegistro: DATETIME
+    foreign_key(idCategoria: INT)
+}
+
+' ===== TABLA ADMINISTRADOR_PRODUCTO =====
+class Administrador_Producto {
+    primary_key(idAdministrador: INT)
+    primary_key(idProducto: INT)
+    fechaAsignacion: DATETIME
+}
+
+' ===== TABLA LISTA =====
+class Lista {
+    primary_key(idLista: INT)
+    unique(numeroLista: VARCHAR(50))
+    fechaCasamiento: DATE
+    fechaFinalizacion: DATE
+    mensajeBienvenida: TEXT
+    fechaCreacion: DATETIME
+    activa: BOOLEAN
+    estado: ENUM
+    foreign_key(idPareja: INT)
+    --
+    Estados:
+    - BORRADOR
+    - ACTIVA
+    - FINALIZADA
+    - CERRADA
+}
+
+' ===== TABLA ITEM_LISTA =====
+class ItemLista {
+    primary_key(idItem: INT)
+    cantidad: INT
+    estadoItem: ENUM
+    fechaAgregado: DATETIME
+    foreign_key(idLista: INT)
+    foreign_key(idProducto: INT)
+    --
+    Estados:
+    - DISPONIBLE
+    - PARCIALMENTE_COMPRADO
+    - COMPRADO
+}
+
+' ===== TABLA COMPRA =====
+class Compra {
+    primary_key(idCompra: INT)
+    fechaCompra: DATETIME
+    montoTotal: DECIMAL(10,2)
+    estadoPago: ENUM
+    unique(codigoTransaccion: VARCHAR(100))
+    foreign_key(idInvitado: INT)
+    foreign_key(idLista: INT)
+    --
+    Estados:
+    - PENDIENTE
+    - PROCESANDO
+    - APROBADO
+    - RECHAZADO
+    - CANCELADO
+}
+
+' ===== TABLA DETALLE_COMPRA =====
+class DetalleCompra {
+    primary_key(idDetalle: INT)
+    cantidad: INT
+    precioUnitario: DECIMAL(10,2)
+    subtotal: DECIMAL(10,2)
+    mensajePersonalizado: TEXT
+    foreign_key(idCompra: INT)
+    foreign_key(idProducto: INT)
+}
+
+' ===== TABLA PAGO =====
+class Pago {
+    primary_key(idPago: INT)
+    monto: DECIMAL(10,2)
+    metodoPago: VARCHAR(50)
+    fechaPago: DATETIME
+    codigoAutorizacion: VARCHAR(100)
+    unique(foreign_key(idCompra: INT))
+}
+
+' ===== TABLA NOTIFICACION =====
+class Notificacion {
+    primary_key(idNotificacion: INT)
+    tipoNotificacion: ENUM
+    tipoClase: VARCHAR(30)
+    asunto: VARCHAR(200)
+    cuerpo: TEXT
+    fechaEnvio: DATETIME
+    enviado: BOOLEAN
+    foreign_key(idUsuario: INT)
+    --
+    ' Atributos NotificacionInvitado
+    detalleCompra: TEXT
+    informacionPago: TEXT
+    --
+    ' Atributos NotificacionPareja
+    productoComprado: VARCHAR(200)
+    mensajeInvitado: TEXT
+    --
+    Tipos:
+    - CONFIRMACION_REGISTRO
+    - RECUPERACION_CONTRASEÑA
+    - VINCULACION_PAREJA
+    - CONFIRMACION_COMPRA
+    - NOTIFICACION_REGALO
+}
+
+' ===== TABLA NOTIFICACION_COMPRA =====
+class Notificacion_Compra {
+    primary_key(idNotificacion: INT)
+    primary_key(idCompra: INT)
+}
+
+' ===== TABLA REPORTE =====
+class Reporte {
+    primary_key(idReporte: INT)
+    tipoReporte: VARCHAR(50)
+    fechaGeneracion: DATETIME
+    titulo: VARCHAR(200)
+    formatoExportacion: ENUM
+    --
+    ' Atributos ReporteProductosMasElegidos
+    fechaInicio: DATE
+    fechaFin: DATE
+    foreign_key(idCategoria: INT)
+    --
+    ' Atributos ReporteStock
+    stockMinimo: INT
+    --
+    Formatos:
+    - PDF
+    - EXCEL
+    - CSV
+}
+
+' ===== TABLA REPORTE_PAREJA =====
+class Reporte_Pareja {
+    primary_key(idReporte: INT)
+    primary_key(idPareja: INT)
+    fechaConsulta: DATETIME
+}
+
+' ===== TABLA REPORTE_ADMINISTRADOR =====
+class Reporte_Administrador {
+    primary_key(idReporte: INT)
+    primary_key(idAdministrador: INT)
+    fechaGeneracion: DATETIME
+}
+
+' ===== RELACIONES =====
+
+' Usuario - Pareja (Composición)
+Usuario "2" }o--|| Pareja : "idPareja\n(FK)\n"
+
+' Pareja - Lista
+Pareja ||--o{ Lista : "idPareja\n(FK)\n"
+
+' Categoria - Producto
+Categoria ||--o{ Producto : "idCategoria\n(FK)\n"
+
+' Usuario - Administrador_Producto - Producto
+Usuario ||--o{ Administrador_Producto : "idAdministrador (FK)"
+Administrador_Producto }o--|| Producto : "idProducto (FK)"
+
+' Lista - ItemLista (Composición)
+Lista ||--o{ ItemLista : "idLista\n(FK)\n"
+
+' ItemLista - Producto
+ItemLista }o--|| Producto : "idProducto\n(FK)\n"
+
+' Usuario (Invitado) - Compra
+Usuario ||--o{ Compra : "idInvitado\n(FK)\n"
+
+' Compra - Lista
+Compra }o--|| Lista : "idLista\n(FK)\n"
+
+' Compra - DetalleCompra (Composición)
+Compra ||--o{ DetalleCompra : "idCompra\n(FK)\n"
+
+' DetalleCompra - Producto
+DetalleCompra }o--|| Producto : "idProducto\n(FK)\n"
+
+' Compra - Pago (1:1)
+Compra ||--|| Pago : "idCompra\n(FK UNIQUE)\n"
+
+' Usuario - Notificacion
+Usuario ||--o{ Notificacion : "idUsuario\n(FK)\n"
+
+' Compra - Notificacion_Compra - Notificacion
+Compra ||--o{ Notificacion_Compra : "idCompra (FK)"
+Notificacion_Compra }o--|| Notificacion : "idNotificacion (FK)"
+
+' Reporte - Categoria (opcional)
+Categoria ||--o{ Reporte : "idCategoria\n(FK)\n"
+
+' Pareja - Reporte_Pareja - Reporte
+Pareja ||--o{ Reporte_Pareja : "idPareja (FK)"
+Reporte_Pareja }o--|| Reporte : "idReporte (FK)"
+
+' Usuario (Admin) - Reporte_Administrador - Reporte
+Usuario ||--o{ Reporte_Administrador : "idAdministrador (FK)"
+Reporte_Administrador }o--|| Reporte : "idReporte (FK)"
+
+' ===== NOTAS =====
+
+note right of Usuario
+    <b>Herencia: Single Table Inheritance</b>
+    Campo discriminador: tipoUsuario
+    - 'INVITADO'
+    - 'PERSONA_PAREJA'
+    - 'ADMINISTRADOR'
+    
+    Atributos específicos según tipo
+end note
+
+note bottom of Pareja
+    <b>Composición con Usuario</b>
+    Una Pareja se compone de
+    exactamente 2 PersonasPareja
+    (tipo='PERSONA_PAREJA')
+end note
+
+note right of Lista
+    <b>Agregación con Pareja</b>
+    Una Pareja puede tener
+    múltiples Listas a lo
+    largo del tiempo
+end note
+
+note bottom of ItemLista
+    <b>Composición con Lista</b>
+    Los items pertenecen
+    exclusivamente a una lista
+    ON DELETE CASCADE
+end note
+
+note right of Compra
+    <b>Relaciones importantes:</b>
+    - Realizada por un Invitado
+    - Asociada a una Lista
+    - Genera múltiples Notificaciones
+    - Tiene un Pago (1:1)
+end note
+
+note bottom of Administrador_Producto
+    <b>Tabla intermedia N:M</b>
+    Administradores gestionan
+    múltiples Productos
+end note
+
+note right of Notificacion
+    <b>Herencia: Single Table</b>
+    Campo discriminador: tipoClase
+    - 'NOTIFICACION_INVITADO'
+    - 'NOTIFICACION_PAREJA'
+end note
+
+note bottom of Reporte
+    <b>Herencia: Single Table</b>
+    Campo discriminador: tipoReporte
+    - 'PRODUCTOS_MAS_ELEGIDOS'
+    - 'INVITADOS_COMPRADORES'
+    - 'STOCK'
+end note
+
+@enduml

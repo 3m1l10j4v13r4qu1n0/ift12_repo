@@ -1,0 +1,251 @@
+@startuml objectDiagram
+skinparam objectAttributeIconSize 0
+skinparam object {
+    BackgroundColor White
+    BorderColor Black
+    BorderThickness 2
+    ArrowColor Black
+}
+
+title Sistema de Gestión de Listas de Regalos - Diagrama de Objetos
+
+' ===== INSTANCIAS DE USUARIOS =====
+
+object "maria:PersonaPareja" as maria {
+    idUsuario = 101
+    dni = "12345678"
+    nombreUsuario = "maria_garcia"
+    email = "maria@email.com"
+    fechaRegistro = 2025-01-15
+    verificado = true
+    activo = true
+    nombre = "María"
+    apellido = "García"
+    esNovio = false
+    fechaVinculacion = 2025-01-20
+}
+
+object "juan:PersonaPareja" as juan {
+    idUsuario = 102
+    dni = "87654321"
+    nombreUsuario = "juan_perez"
+    email = "juan@email.com"
+    fechaRegistro = 2025-01-18
+    verificado = true
+    activo = true
+    nombre = "Juan"
+    apellido = "Pérez"
+    esNovio = true
+    fechaVinculacion = 2025-01-20
+}
+
+object "ana:Invitado" as ana {
+    idUsuario = 201
+    dni = "11223344"
+    nombreUsuario = "ana_invitada"
+    email = "ana@email.com"
+    fechaRegistro = 2025-03-10
+    verificado = true
+    activo = true
+    telefono = "1156789012"
+    preferencias = "Electrodomésticos"
+}
+
+object "admin:Administrador" as admin {
+    idUsuario = 001
+    dni = "99887766"
+    nombreUsuario = "admin_sistema"
+    email = "admin@sistema.com"
+    fechaRegistro = 2024-01-01
+    verificado = true
+    activo = true
+    nivelAcceso = 3
+}
+
+' ===== PAREJA Y LISTA =====
+
+object "pareja1:Pareja" as pareja1 {
+    idPareja = 501
+    codigoVinculacion = "ABC123XYZ"
+    fechaCasamiento = 2025-06-15
+    fechaVinculacion = 2025-01-20
+    estado = ACTIVO
+}
+
+object "lista1:Lista" as lista1 {
+    idLista = 1001
+    numeroLista = "L-2025-0001"
+    fechaCasamiento = 2025-06-15
+    fechaFinalizacion = 2025-08-15
+    mensajeBienvenida = "¡Gracias por acompañarnos!"
+    fechaCreacion = 2025-02-01
+    activa = true
+    estado = ACTIVA
+}
+
+' ===== PRODUCTOS Y CATEGORÍAS =====
+
+object "electrodomesticos:Categoria" as cat1 {
+    idCategoria = 10
+    nombre = "Electrodomésticos"
+    descripcion = "Artículos para el hogar"
+}
+
+object "licuadora:Producto" as prod1 {
+    idProducto = 2001
+    codigo = "ELEC-001"
+    nombre = "Licuadora Profesional"
+    descripcion = "1000W, 5 velocidades"
+    precio = 45000.00
+    stockActual = 15
+    activo = true
+    fechaRegistro = 2024-12-01
+}
+
+object "microondas:Producto" as prod2 {
+    idProducto = 2002
+    codigo = "ELEC-002"
+    nombre = "Microondas Digital"
+    descripcion = "28 litros, 900W"
+    precio = 89000.00
+    stockActual = 8
+    activo = true
+    fechaRegistro = 2024-12-10
+}
+
+' ===== ITEMS EN LA LISTA =====
+
+object "item1:ItemLista" as item1 {
+    idItem = 3001
+    cantidad = 1
+    estadoItem = COMPRADO
+    fechaAgregado = 2025-02-05
+}
+
+object "item2:ItemLista" as item2 {
+    idItem = 3002
+    cantidad = 1
+    estadoItem = DISPONIBLE
+    fechaAgregado = 2025-02-08
+}
+
+' ===== COMPRA REALIZADA =====
+
+object "compra1:Compra" as compra1 {
+    idCompra = 4001
+    fechaCompra = 2025-03-15 14:30
+    montoTotal = 45000.00
+    estadoPago = APROBADO
+    codigoTransaccion = "TRX-2025-4001"
+}
+
+object "detalle1:DetalleCompra" as detalle1 {
+    idDetalle = 5001
+    cantidad = 1
+    precioUnitario = 45000.00
+    subtotal = 45000.00
+    mensajePersonalizado = "¡Felicidades!"
+}
+
+object "pago1:Pago" as pago1 {
+    idPago = 6001
+    monto = 45000.00
+    metodoPago = "Tarjeta de Crédito"
+    fechaPago = 2025-03-15 14:32
+    codigoAutorizacion = "AUTH-789456"
+}
+
+' ===== NOTIFICACIONES =====
+
+object "notif1:NotificacionInvitado" as notif1 {
+    idNotificacion = 7001
+    asunto = "Confirmación de compra"
+    fechaEnvio = 2025-03-15 14:35
+    enviado = true
+    tipoNotificacion = CONFIRMACION_COMPRA
+    detalleCompra = "Licuadora Profesional"
+    informacionPago = "Pago aprobado"
+}
+
+object "notif2:NotificacionPareja" as notif2 {
+    idNotificacion = 7002
+    asunto = "Nuevo regalo recibido"
+    fechaEnvio = 2025-03-15 14:35
+    enviado = true
+    tipoNotificacion = NOTIFICACION_REGALO
+    productoComprado = "Licuadora Profesional"
+    mensajeInvitado = "¡Felicidades!"
+}
+
+' ===== RELACIONES ENTRE OBJETOS =====
+
+' Composición de Pareja
+pareja1 *-- maria : compuesta por
+pareja1 *-- juan : compuesta por
+
+' Pareja y Lista
+pareja1 -- lista1 : posee
+
+' Lista e Items
+lista1 *-- item1 : contiene
+lista1 *-- item2 : contiene
+
+' Items y Productos
+item1 -- prod1 : referencia
+item2 -- prod2 : referencia
+
+' Productos y Categoría
+prod1 -- cat1 : pertenece a
+prod2 -- cat1 : pertenece a
+
+' Compra
+ana -- compra1 : realiza
+compra1 -- lista1 : asociada a
+compra1 *-- detalle1 : contiene
+compra1 -- pago1 : procesa
+
+' Detalle y Producto
+detalle1 -- prod1 : incluye
+
+' Notificaciones
+compra1 -- notif1 : genera
+compra1 -- notif2 : genera
+ana -- notif1 : recibe
+maria -- notif2 : recibe
+juan -- notif2 : recibe
+
+' Administrador y Productos
+admin -- prod1 : gestiona
+admin -- prod2 : gestiona
+
+' ===== NOTAS EXPLICATIVAS =====
+
+note right of pareja1
+    Pareja vinculada y activa
+    con lista de regalos creada
+    para casamiento en junio 2025
+end note
+
+note bottom of lista1
+    Lista activa con 2 productos:
+    - Licuadora (comprada)
+    - Microondas (disponible)
+end note
+
+note right of compra1
+    Compra realizada por Ana
+    el 15 de marzo 2025
+    Estado: Aprobada
+end note
+
+note bottom of item1
+    Este producto ya fue
+    comprado por un invitado
+end note
+
+note bottom of item2
+    Este producto aún está
+    disponible para comprar
+end note
+
+@enduml
